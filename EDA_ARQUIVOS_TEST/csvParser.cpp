@@ -67,13 +67,24 @@ vector<string> separaEmCelulas(vector<string>& linhas) {
     return splits;
 };
 
+string trim(const string& str)
+{
+    size_t first = str.find_first_not_of(' ');
+    if (string::npos == first)
+    {
+        return str;
+    }
+    size_t last = str.find_last_not_of(' ');
+    return str.substr(first, (last - first + 1));
+}
+
 // Lê o arquivo, separa-o em linhas e adiciona-as num vetor
 vector<string> splitCSV(ifstream& file) {
     string extrator;
     vector<string> linhas;
 
     while(getline(file, extrator, '\n')) {
-        linhas.push_back(extrator);
+        linhas.push_back(trim(extrator));
     }
 
     vector<string> celulas = separaEmCelulas(linhas); // cria um vetor com as células do arquivo

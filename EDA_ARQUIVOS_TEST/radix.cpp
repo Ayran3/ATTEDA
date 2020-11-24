@@ -73,7 +73,7 @@ void radixGenerico(cListaDupEnc* Lista, int parametroOrdem, int tamanhoEntrada, 
       }
       //Se for ordenar pelo parametro 1 e 2, eu verifico se a hora esta no formato 00:00, se estiver em 0:00, eu acrescento um zero, para manter a string uniforme e assim facilita na ordenacao.
       if(parametroOrdem == 2 || parametroOrdem == 1) {
-        if(stringOrdem.length() != 0 &&  stringOrdem.length() < 16) {
+        if(stringOrdem.length() >= 15) {
           stringOrdem.insert(11, "0");
         }
       }
@@ -90,16 +90,19 @@ void radixGenerico(cListaDupEnc* Lista, int parametroOrdem, int tamanhoEntrada, 
       if(stringOrdem == "") {
         //Se o vetor n tiver nada na posicao 10, eu coloco o No La.
         if(baldes[10] == NULL) {
-          cNo* aux2 = aux1->getProx();
-          aux1->setProx(NULL);
-          aux1->setAnte(NULL);
+          cNo* aux2 = NULL;
+          if (aux1 != NULL) {
+            cNo* aux2 = aux1->getProx();
+            aux1->setProx(NULL);
+            aux1->setAnte(NULL);
+          }
           baldes[10] = aux1;
           aux1 = aux2;
         }
         else {
           //Se o vetor ja tiver alguma coisa na posicao 10 eu vou percorrendo o prox desse no ate achar um NULL, e ai eu coloco o novo No la, fica tipo assim.
           cNo* aux3 = baldes[10];                     //0:
-          cNo* aux2 = aux1->getProx();                //1:
+          cNo* aux2 = aux1 ? aux1->getProx() : NULL;                //1:
           while(aux3->getProx() != NULL) {            //2:
             aux3 = aux3->getProx();                   //3:
           }                                           // ...
@@ -138,6 +141,11 @@ void radixGenerico(cListaDupEnc* Lista, int parametroOrdem, int tamanhoEntrada, 
           aux3->setProx(aux1);
           aux1 = aux2;
         }
+      }
+      if (aux1 == NULL) {
+        aux1 = Lista->getInicio();
+        Lista->ImprimirLista();
+        if (Lista->getTamanho() == 0) break;
       }
     }
     //Ai aq eu desco a coluna do buckets e vou juntando as mine listas q eu formei, e coloco na lista original
